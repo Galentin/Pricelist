@@ -23,34 +23,36 @@ public class Pricelist {
         return false;
     }
 
-    public double setPrice (int codeOf, double priceNew) {
+    public String setPrice (int codeOf, double priceNew) {
         for (Product product : products)
             if (product.code == codeOf) {
                 product.price = priceNew;
-                return product.price;
+                return "New price: ".concat(Double.toString(product.price));
             }
-        return -1;
+        return "Impossible";
     }
 
     public String setName (int codeOf, String nameNew){
         for (Product product : products)
             if (product.code == codeOf){
                 product.name = nameNew;
-                return product.name;
+                return "New name: ".concat(product.name);
             }
         return "Impossible" ;
     }
 
-    public double purchase (int codeOf, int number) {
+    public double purchase (int mas[][]) {
         double sum = 0.0;
-        for (Product product : products) {
-            if (product.code == codeOf) {
-                for (int i = 0; i < number; i ++)
-                    sum = sum + product.price;
+        for (Product product : products){
+            for (int i = 0; i < mas.length; i ++ ) {
+                if (mas[i][0] == product.code) {
+                    for (int j = 0; j < mas[i][1]; j++)
+                        sum = sum + product.price;
+                }
             }
         }
         if (sum != 0) return sum;
-        else return -1;
+        else return 0.0;
     }
 
 
