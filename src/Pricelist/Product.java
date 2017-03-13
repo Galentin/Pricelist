@@ -1,14 +1,19 @@
 package Pricelist;
 
 public class Product {
-    String name;
-    final int code;
-    double price;
+    private final String name;
+    private final double price;
 
-    public Product(String name, int code, double price){
+    public Product(String name, double price){
         this.name = name;
-        this.code = code;
         this.price = price;
+    }
+    public double getPrice(){
+        return price;
+    }
+
+    public String getName(){
+        return name;
     }
 
     @Override
@@ -18,7 +23,6 @@ public class Product {
 
         Product product = (Product) o;
 
-        if (code != product.code) return false;
         if (Double.compare(product.price, price) != 0) return false;
         return name != null ? name.equals(product.name) : product.name == null;
 
@@ -26,11 +30,8 @@ public class Product {
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = name != null ? name.hashCode() : 0;
-        result = 31 * result + code;
-        temp = Double.doubleToLongBits(price);
+        int result = name != null ? name.hashCode() : 0;
+        long temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

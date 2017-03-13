@@ -4,51 +4,59 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class PricelistTest {
 
-    private ArrayList <Product> products = new ArrayList<>();
+    private Map<Integer, Product> products = new HashMap<>();
 
     @Before
     public void product(){
-        products.add(new Product("meat", 123, 250.6));
-        products.add(new Product("cheese", 124, 239.1));
-        products.add(new Product("water", 28, 9.6));
-        products.add(new Product("chocolate", 23, 11.8));
+        products.clear();
+        products.put(123, new Product("meat", 250.6));
+        products.put(124, new Product("cheese",239.1));
+        products.put(28, new Product("water", 9.6));
+        products.put(23, new Product("chocolate", 11.8));
     }
 
     @Test
     public void addProduct() throws Exception {
-        products.add(new Product("fruit", 24, 13.6));
-        assertTrue(products.contains(new Product("fruit", 24, 13.6)));
+        products.put(24,new Product("fruit", 13.6));
+        assertTrue(products.containsKey(24));
     }
 
     @Test
-    public void removeProduct() throws Exception {
-        products.remove(new Product("chocolate", 23, 11.8));
-        assertFalse(products.contains(new Product("chocolate", 23, 11.8)));
+   public void removeProduct() throws Exception {
+        products.remove(23);
+        assertFalse(products.containsKey(23));
     }
 
     @Test
     public void setPrice() throws Exception {
-        assertEquals("New price: 11.5", new Pricelist(products).setPrice(28, 11.5));
-        assertEquals("Impossible" , new Pricelist(products).setPrice(22, 11.5));
+        products.remove(28);
+        products.put(28, new Product("water", 11.5));
+        assertTrue(products.containsKey(28));
     }
 
     @Test
     public void setName() throws Exception {
-        assertEquals("New name: juice", new Pricelist(products).setName(28, "juice"));
-        assertEquals("Impossible" , new Pricelist(products).setName(22, "candies"));
+        products.remove(28);
+        products.put(28, new Product("juice", 9.6));
+        assertTrue(products.containsKey(28));
     }
 
     @Test
     public void purchase() throws Exception {
-        int[][] mas = { {123, 2},
-                        {121, 3},
-                        {28, 4} };
-        assertEquals(539.6, new Pricelist(products).purchase(mas),1.0e-5);
+        List<Purchase> purchas = new ArrayList<Purchase>();
+        purchas.add(new Purchase( 28, 1));
+        purchas.add(new Purchase( 23, 1));
+        purchas.add(new Purchase( 1, 45));
+
+        assertEquals(21.4, new Pricelist(products).purchase(purchas),1.0e-5);
     }
 
 }

@@ -1,51 +1,41 @@
 package Pricelist;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Pricelist {
 
-    private final ArrayList <Product> products;
+    private final Map<Integer,Product> products;
 
-    public Pricelist (ArrayList<Product> products){
+    public Pricelist (final Map<Integer,Product> products){
         this.products = products;
     }
 
-    public void addProduct(final Product product) {
-        products.add(product);
+    public void addProduct(final int code, final Product product) {
+        products.put(code, product);
     }
 
-    public void removeProduct(final int codeOf){
-        for (Product product : products)
-            if (product.code == codeOf)
-                products.remove(product);
+    public void removeProduct(final int code){
+        products.remove(code);
     }
 
-    public String setPrice (final int codeOf, final double priceNew) {
-        for (Product product : products)
-            if (product.code == codeOf) {
-                product.price = priceNew;
-                return "New price: ".concat(Double.toString(product.price));
-            }
-        return "Impossible";
+   public void setPrice (final int code, final double priceNew) {
+       Product product = products.get(code);
+       products.remove(code);
+       products.put(code, new Product(product.getName(), priceNew));
     }
 
-    public String setName (final int codeOf, final String nameNew){
-        for (Product product : products)
-            if (product.code == codeOf){
-                product.name = nameNew;
-                return "New name: ".concat(product.name);
-            }
-        return "Impossible" ;
+    public void setName (final int code, final String nameNew){
+        Product product = products.get(code);
+        products.remove(code);
+        products.put(code, new Product(nameNew, product.getPrice()));
     }
 
-    public double purchase (final int mas[][]) {
+    public double purchase (final List<Purchase> purchas) {
         double sum = 0.0;
-        for (Product product : products){
-            for (int i = 0; i < mas.length; i ++ )
-                if (mas[i][0] == product.code)
-                    for (int j = 0; j < mas[i][1]; j++)
-                        sum = sum + product.price;
-        }
+            for (Purchase purchase: purchas)
+                if (products.containsKey(purchase.getCode()))
+                    sum = sum + products.get(purchase.getCode()).getPrice() * purchase.getNumber();
         return sum;
     }
 
